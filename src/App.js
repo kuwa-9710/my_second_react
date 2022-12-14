@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom";
+import { createStore } from "redux";
 
 const App = () => (
   <BrowserRouter>
     <div className="container mt-5 text-center">
+      {/* routeの書き方が変わっています */}
+      {/* Routesで囲むことが必須となります */}
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -13,15 +16,34 @@ const App = () => (
   </BrowserRouter>
 );
 
+// using react redux
+const vote = (state=0, action) => {
+  switch (action.type) {
+    case 'ADD':
+      return state + 1
+    default:
+      return state
+  }
+}
+
+// storeを作成
+let store = createStore(vote)
+
 const Home = () => {
+  // stateの値が変更される
+  store.dispatch({ type: 'ADD'})
+  let x = store.getState().toString()
+
   return (
     <div>
       <h1>Welcome!</h1>
+      <p>Vote: {x}</p>
       <p><Link to="/about">About</Link></p>
     </div>
   );
 };
 
+// rooting
 const About = () => {
   return (
     <div>
